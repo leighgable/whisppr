@@ -1,0 +1,80 @@
+name: Nix build
+on: [push,pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+
+    - name: Install dependencies
+      run: |
+        brew install cmake
+
+    - name: Build
+      run: |
+        cmake \
+           -S $PWD \
+           -B build_folder
+        cmake --build build_folder
+
+  ubuntu:
+    name: Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt -yqq install \
+          build-essential cmake libpipewire-0.3-dev ninja-build \
+          libz-dev pkgconf git
+
+    - name: Build
+      run: |
+        cmake \
+           -S $PWD \
+           -B build_folder \
+           -G Ninja
+        cmake --build build_folder
+
+    - name: Upload binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: tut1-ubuntu31
+        path: |
+          build_folder/tut1
+
+
+  nix:
+    name: Nix
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+
+    - name: Install nix
+      uses: cachix/install-nix-action@v24
+
+    - name: Build
+      run: |
+        nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+        nix-channel --update
+        nix-build -E 'with import <nixpkgs> {}; callPackage ./flake.nix {}'
