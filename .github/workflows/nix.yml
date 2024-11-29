@@ -6,6 +6,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  macos:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+
+    - name: Install dependencies
+      run: |
+        brew install cmake
+
+    - name: Build
+      run: |
+        cmake \
+           -S $PWD \
+           -B build_folder
+        cmake --build build_folder
+
   ubuntu:
     name: Ubuntu
     runs-on: ubuntu-latest
