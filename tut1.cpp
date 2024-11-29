@@ -1,5 +1,8 @@
-#include <pipewire-0.3/pipewire/pipewire.h>
+#include <pipewire/pipewire.h>
+#define MINIAUDIO_IMPLEMENTATION
+#include "miniaudio.h"
 
+#include <whisper.h>
 static void registry_event_global(void *data, uint32_t id,
                 uint32_t permissions, const char *type, uint32_t version,
                 const struct spa_dict *props)
@@ -39,7 +42,10 @@ int main(int argc, char *argv[])
                                        &registry_events, NULL);
  
         pw_main_loop_run(loop);
- 
+
+
+        auto ctx = whisper_init_from_file("foo.model");
+
         pw_proxy_destroy((struct pw_proxy*)registry);
         pw_core_disconnect(core);
         pw_context_destroy(context);
