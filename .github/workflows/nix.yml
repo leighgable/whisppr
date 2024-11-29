@@ -6,6 +6,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  ubuntu:
+    name: Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt -yqq install \
+          build-essential cmake libpipewire-0.3-dev ninja-build \
+          libz-dev pkgconf git
+
+    - name: Build
+      run: |
+        cmake \
+           -S $PWD \
+           -B build_folder \
+           -G Ninja
+        cmake --build build_folder
+
   nix:
     name: Nix
     runs-on: ubuntu-latest
