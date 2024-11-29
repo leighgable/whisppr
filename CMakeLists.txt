@@ -9,7 +9,9 @@ find_package(ZLIB REQUIRED)
 
 # 2. Packages avec un module CMake custom
 # ex. Ce dépôt: FindPipeWire.cmake + CMAKE_MODULE_PATH
-find_package(PipeWire REQUIRED)
+if(LINUX)
+  find_package(PipeWire REQUIRED)
+endif()
 
 # 3. Packages externes façon package manager
 include(FetchContent)
@@ -24,5 +26,12 @@ FetchContent_MakeAvailable(whisper)
 
 add_executable(tut1 tut1.cpp)
 
-target_link_libraries(tut1 PRIVATE m PipeWire::PipeWire whisper)
+target_link_libraries(tut1 PRIVATE m whisper)
+if(LINUX)
+    target_link_libraries(tut1 PRIVATE PipeWire::PipeWire)
+elseif(APPLE)
+    # etc.
+elseif(WIN32)
+    # etc.
+endif()
 
