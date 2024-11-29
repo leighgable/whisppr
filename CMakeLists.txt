@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.26)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 project(whisppr)
 
+set(BUILD_SHARED_LIBS OFF)
+
 # 1. Packages avec un module CMake présent sur le système
 # ex. ZLIB: (/usr/share/cmake/Modules/FindZLIB.cmake)
 find_package(ZLIB REQUIRED)
