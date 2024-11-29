@@ -1,0 +1,5 @@
+*.[oa]
+build/
+whisper.cpp/
+.direnv/
+.envrc
