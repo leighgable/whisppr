@@ -41,7 +41,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt -yqq install \
-          build-essential cmake libpipewire-0.3-dev ninja-build \
+          build-essential cmake miniaudio ninja-build \
           libz-dev pkgconf git
 
     - name: Build

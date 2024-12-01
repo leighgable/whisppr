@@ -1,7 +1,7 @@
 {
   description = "A Nix-flake-based C/C++ development environment";
 
-  inputs.nixpkgs.url = "nixpkgs/nixos-24.05";
+  inputs.nixpkgs.url = "nixpkgs/nixos-24.11";
 
   outputs = { self, nixpkgs }:
     let
@@ -19,24 +19,18 @@
           }
           {
             nativeBuildInputs = with pkgs; [
-              meson
-              ninja
+              cmake
               pkg-config
+              ninja
             ];
             
             buildInputs = with pkgs; [
               clang-tools
               gtest
-              pipewire
-              llvmPackages_12.openmp
+              # llvmPackages_12.openmp
             ];
             packages = with pkgs; [
-              cppcheck
-              doxygen
-              SDL2
-              lcov
-              vcpkg
-              vcpkg-tool
+              miniaudio
             ] ++ (if system == "aarch64-darwin" then [ ] else [ gdb ]);
             shellhook = '' '';
           };
